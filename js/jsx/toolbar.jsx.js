@@ -432,7 +432,7 @@ WLoginForm = React.createClass({
         $.ajax({
             cache: false,
             type: "POST",
-            dataType: "JSON",
+            // dataType: "JSON",
             data: {
                 email: this.state.login,
                 password: this.state.password
