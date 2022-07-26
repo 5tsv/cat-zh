@@ -10,7 +10,16 @@
 </head>
 
 <body>
-<a href = "updateLog.html">游戏主体更新内容</a>、<a href = "https://petercheney.gitee.io/scientists/updateLog.html">珂学家更新内容</a>
+<script type="text/javascript">
+  function changelog() {
+    window.open(`updateLog.html` + location.search);
+  };
+  function scientists() {
+    window.open(`https://petercheney.gitee.io/scientists/updateLog.html?v=` + new Date().getDate());
+  };
+</script>
+<a href="#" onclick = "changelog();">游戏主体更新内容</a>、
+<a href="#" onclick = "scientists();">珂学家更新内容</a>
   <pre>
 v 1.4.9.1
 * 游戏不会再为无限流的K/G/M前缀进行标记而中断。

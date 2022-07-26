@@ -45,21 +45,11 @@
 		<!-- <script src="lib/system.js?v=_2"></script> -->
 		<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/systemjs/0.21.6/system.js"></script>
 		<script>
-			if (typeof React === 'undefined') {
-				document.write(decodeURI('%3Cscript%20src=%22lib/react.min.js%22%3E%3C/script%3E'));
-			}
-			if (typeof jQuery === 'undefined') {
-					document.write(decodeURI('%3Cscript%20src=%22lib/jQuery.js%22%3E%3C/script%3E'));
-				}
-			if (typeof dojo === 'undefined') {
-				document.write(decodeURI('%3Cscript%20src=%22lib/dojo.xd.js%22%3E%3C/script%3E'));
-			}
-			if (typeof LZString === 'undefined') {
-				document.write(decodeURI('%3Cscript%20src=%22lib/lz-string.js%22%3E%3C/script%3E'));
-			}
-			if (typeof SystemJS == 'undefined') {
-				document.write(decodeURI('%3Cscript%20src=%22lib/system.js%22%3E%3C/script%3E'));
-			}
+			if (typeof React === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22lib/react.min.js%22%3E%3C/script%3E'));}
+			if (typeof jQuery === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22lib/jQuery.js%22%3E%3C/script%3E'));}
+			if (typeof dojo === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22lib/dojo.xd.js%22%3E%3C/script%3E'));}
+			if (typeof LZString === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22lib/lz-string.js%22%3E%3C/script%3E'));}
+			if (typeof SystemJS === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22lib/system.js%22%3E%3C/script%3E'));}
 		</script>
 		<!-- <script async src="lib/google.js"></script> -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-0QBDX221PR"></script>
@@ -74,7 +64,7 @@
 
 		<script type="text/javascript">
 			var now = Date.now();
-			$("<link />").attr("rel", "stylesheet").attr("type", "text/css").attr("href", "res/default.css?v=" + 2).appendTo($("head"));
+			$("<link />").attr("rel", "stylesheet").attr("type", "text/css").attr("href", "res/default.css?v=" + new Date().getMonth()).appendTo($("head"));
 		</script>
 
 		<script>
@@ -336,12 +326,7 @@
 			function wipe() {
 				gamePage.wipe();
 			}
-			// we don't need no css, let the dynamic height be. be, dynamic height, be.
-			function resetGameLogHeight() {
-				$("#devPanel").outerHeight($("#footerLinks").position().top - $("#gameLog").offset().top);
-			}
-			$(resetGameLogHeight);
-			$(window).resize(resetGameLogHeight);
+
 		</script>
 
 		<title>猫国建设者 - Kittens Game - 一款黑暗灵魂增量游戏</title>
@@ -404,7 +389,7 @@
 					<span id="devModeButton" style="display: none;"><a href="#" id="devBtn" onclick="dev();">DEV</a> |</span>
 					<a id="wipe-link" href="#" onclick="wipe();">Wipe</a> |
 					<a id="getTheApp-link" href="#" onclick="gamePage.ui.displayAppDialog();" style="font-weight: bold; color:#666;">Get the app</a> |
-					<a href="changelog.html" target="_blank">Ver <span id="versionLink">?.?.?.?</span></a>
+					<a target="_blank" onclick='changelog();'>Ver <span id="versionLink">?.?.?.?</span></a>
 					<a href="#" id="newVersion" onclick="gamePage.reload();" title="有新版本 !" style="display:none">↻</a>
 				</div>
 			</div>
@@ -617,7 +602,7 @@
 				<!-- [<a href="https://gitee.com/likexia/cbc-kitten-scientists" target="_blank" style="color:blue;text-decoration:none;" title="点击查看">教程</a>] -->
 				<br>
 				<input id="set-kgp-enable" type="checkbox">
-				<label id="kgp-label" for="set-kgp-enable">启用资源进度条</label>
+				<label id="kgp-label" for="set-kgp-enable">资源进度条</label>
 				<br>
 				<input id="autoSaveReset" type="checkbox" onclick="gamePage.opts['autoSaveReset'] = $('#autoSaveReset')[0].checked;">
 				<label id="optionAutoSaveReset" for="autoSaveReset">重置游戏自动备份存档<em>（需要在浏览器设置下载保存位置！）</em></label>
@@ -695,7 +680,7 @@
 
 			<div id="importDiv" style="display: none" class="dialog help">
 				<div id="importWarning">Warning! Importing data will overwrite your current game data.</div>
-				<input id="importFile" type="file" value="选择存档文件"></input>
+				<input id="importFile" type="file" value="选择存档文件"/>
 				<input id="doFileImportButton" type="button" value="使用文件导入" onclick="readText();" style="margin-top: 10px;">
 				<br>
 				<span>上面选择文件后点击使用文件导入，下面是粘贴存档后点击导入</span>
@@ -796,62 +781,61 @@
 			var enableKS = function() {
 				localStorage['zh.ks.enable'] = 'enable';
 				$("#ks-label").text("可爱的猫猫科学家为您服务");
-				$("#set-ks-enable").attr("checked", true);
-				var srcScientists = "https://petercheney.gitee.io/scientists/kitten-scientists.user.js?v=";
-				document.body.appendChild(document.createElement('script')).src = srcScientists + new Date().getDate() + ksVision;
+				$('#ks-options').show();
 			};
-			var disableKS = function() {
-				localStorage['zh.ks.enable'] = 'disable';
-				$("#ks-label").text("小猫科学家将在页面刷新后关闭");
-				$("#set-ks-enable").attr("checked", false);
-			};
-			
-		   var ks = function() {
-				if (ksVision) {
-					if (localStorage['zh.ks.enable'] === 'enable') {
-						enableKS();
-					}
-				} else {
-					setTimeout(function() {
-						ks();
-					}, 500);
+
+			var ks = function() {
+				if (ksVision && window.run === undefined) {
+					let srcScientists = "https://petercheney.gitee.io/scientists/kitten-scientists.user.min.js?v=";
+					document.body.appendChild(document.createElement('script')).src = srcScientists + ksVision;
+					clearInterval(timeKS);
+					timeKS = null;
 				}
 			};
-			ks();
-
+			var timeKS;
+			if (localStorage['zh.ks.enable'] === 'enable') {
+				timeKS = setInterval(ks, 1000);
+				$("#set-ks-enable").attr("checked", true);
+				$("#ks-label").text("可爱的猫猫科学家为您服务");
+			}
 			$("#set-ks-enable").on('change', function() {
 				if (localStorage['zh.ks.enable'] === 'enable') {
-					disableKS();
-					alert("请在保存游戏后刷新页面");
+					localStorage.setItem('zh.ks.enable', 'disable');
+					$('#toggle-engine').is(':checked') ? $('#toggle-engine').click() : false;
+					$('#ks-options').hide();
+					$("#ks-label").text("启用小猫珂学家");
+					return;
 				} else if (!localStorage['zh.ks.enable']) {
-					alert("第一次使用珂学家请点击说明书链接并参考\n触发条件为该项目的触发资源的 当前资源 / 资源上限 达到多少时会触发珂学家的该项目\n太阳教团在附加项目里\n\n珂学家设置请根据自身实际情况调整，并不能做到满足所有人\n挂机推荐工艺项目默认设置能勾限制尽量勾限制\n文化、钛、科学爆仓属于正常现象\n还有问题或者建议，可以在猫国群找Cheney");
-					enableKS();
-				} else {
-					enableKS();
+					alert("第一次使用珂学家请点击说明书链接并参考\n\n太阳教团在附加项目里\n\n珂学家设置请根据自身实际情况调整，并不能做到满足所有人\n挂机推荐工艺项目默认设置能勾平衡尽量勾平衡\n文化、钛、科学爆仓属于正常现象\n还有问题或者建议，可以在猫国群找Cheney");
 				}
+				enableKS();
 			});
 
-			var enableKGP = function() {
-				localStorage['zh.kgp.enable'] = 'enable';
-				$("#kgp-label").text("资源进度条已启动");
-				$("#set-kgp-enable").attr("checked", true);
-				document.body.appendChild(document.createElement('script')).src = 'KGP.js?v=2';
+			var loadKGP = function () {
+				if (ksVision && game.timer) {
+					let srcKGP = "KGP.min.js?v=";
+					document.body.appendChild(document.createElement('script')).src = srcKGP + ksVision;
+					clearInterval(window.timeKGP);
+					window.timeKGP = null;
+					$("#set-kgp-enable").attr("checked", true);
+				}
 			};
-			var disableKGP = function() {
-				localStorage['zh.kgp.enable'] = 'disable';
-				$("#kgp-label").text("资源进度条将在页面刷新后关闭");
-				$("#set-kgp-enable").attr("checked", false);
-			};
-
-			if (localStorage['zh.kgp.enable'] === 'enable') {
-				enableKGP();
+			if (localStorage['zh.kgp.enable'] !== 'disable') {
+				var timeKGP = setInterval(loadKGP, 1000);
 			}
+
 			$("#set-kgp-enable").on('change', function() {
-				if (localStorage['zh.kgp.enable'] === 'enable') {
-					disableKGP();
-					alert("请在保存游戏后刷新页面");
+				if (!localStorage['zh.kgp.enable'] || localStorage['zh.kgp.enable'] === 'disable') {
+					localStorage.setItem('zh.kgp.enable', 'enable');
+					$("#kgp-label").text("资源进度条已启动");
 				} else {
-					enableKGP();
+					localStorage.setItem('zh.kgp.enable', 'disable');
+					$("#kgp-label").text("启用资源进度条");
+				}
+				if (window.initKGP) {
+					initKGP();
+				} else {
+					loadKGP();
 				}
 			});
 
@@ -864,10 +848,8 @@
 					numId = nummonLoad = srcNummon = null;
 				}
 			};
-			var numId = setInterval(nummonLoad, 2500);
-		</script>
+			var numId = setInterval(nummonLoad, 3000);
 
-		<script type="text/javascript">
 			var paragonWebsite = function() {
 				if (typeof gamePage !== "undefined") {
 					var b = game.prestige.getParagonStorageRatio();
@@ -891,13 +873,13 @@
 				}
 			};
 			var id = setInterval(paragonWebsite, 10000);
+
 			//var gitee = setTimeout(() => {
 			//	if (game && game.ui) {
 			//		game.ui.showDialog("importantGiteeDiv");
 			//	}
 			//}, 5000);
-		</script>
-		<script type="text/javascript">
+
 			function readText() {
 				var file = document.getElementById("importFile").files[0];
 				if (!file) {
@@ -911,6 +893,9 @@
 				$('#importDiv').hide();
 				reader = null;
 			}
+			function changelog() {
+				window.open(`changelog.html?v=` + buildRevision);
+			};
 		</script>
 	</body>
 

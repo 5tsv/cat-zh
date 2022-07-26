@@ -1470,8 +1470,13 @@ dojo.declare("com.nuclearunicorn.game.ui.ButtonModern", com.nuclearunicorn.game.
 			};
 			this.game.tooltipUpdateFunc();
 
-			var pos = $(container).position();
-			pos.left += 300;
+			var Container = $(container);
+			var pos = Container.position();
+			if (this.game.ui.fullWidth) {
+				pos.left = 300 + Container.offset().left;
+			} else {
+				pos.left += 300;
+			}
 
 			//prevent tooltip from leaving the window area
 			var maxTooltipTop = $(window).scrollTop() + $(window).height() - $(tooltip).height() - 50; //50px padding-bottom

@@ -1,24 +1,29 @@
 const CACHE_NAME = 'likexiaCat';
 const locationUrl = location.origin + location.pathname.replace('serviceWorker.js', '');
-
+const cdn = 'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/';
+const strap = "https://petercheney.github.io/strap/";
 const cdnCache = [
-	"https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/lz-string/1.4.1/lz-string.js",
-	"https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.6.0/jquery.min.js",
-	"https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/react/0.14.10/react.min.js",
-	"https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/dojo/1.6.0/dojo.xd.js",
-	"https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/systemjs/0.21.6/system.js",
+	cdn + "lz-string/1.4.1/lz-string.js",
+	cdn + "jquery/3.6.0/jquery.min.js",
+	cdn + "react/0.14.10/react.min.js",
+	cdn + "dojo/1.6.0/dojo.xd.js",
+	cdn + "systemjs/0.21.6/system.js",
+	strap + "strapdown.js",
+	strap + "strapdown.css",
+	strap + "themes/litera.min.css",
+	strap + "themes/bootstrap-responsive.min.css",
 ];
 
-const urlsToCache = [
-	locationUrl,
-	locationUrl + 'index.html',
-];
+// const urlsToCache = [
+// 	locationUrl,
+// 	locationUrl + 'index.html',
+// ];
 
 // 白名单
 const CACHE_LIST = [
 	'lf3-cdn-tos.bytecdntp.com',
 	location.host,
-	//'petercheney.gitee.io',
+	'petercheney.github.io',
 ];
 
 const NO_CACHE_LIST = [
@@ -60,8 +65,12 @@ self.addEventListener("activate", event => {
 				});
 			});
 		}).then(() => {
-			// 装新的sw
-			return self.clients.claim();
+			caches.open('cdn').then(cache => {
+				return cache.addAll(cdnCache);
+			}).then(() => {
+				// 装新的sw
+				return self.clients.claim();
+			})
 		})
 	);
 });
@@ -88,7 +97,6 @@ self.addEventListener('fetch', function(event) {
 						return response;
 					}
 					if (objectURL.search) {
-						/*serverJson !== -1 , 版本号有网更新缓存*/
 						if (buildJson) {
 							useCache = false;
 						}
@@ -104,7 +112,7 @@ self.addEventListener('fetch', function(event) {
 						return responseFetch;
 					}
 					// 网络获得成功，再缓存
-					var responseFetchToCache = responseFetch.clone();
+					let responseFetchToCache = responseFetch.clone();
 					caches.open(CACHE_NAME).then(function(cache) {
 						return cache.delete(eventRequest, {
 							ignoreSearch: true,
