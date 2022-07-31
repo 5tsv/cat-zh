@@ -1,20 +1,18 @@
-let KGPInterval;
-
 setTimeout(() => {
 	initKGP();
 }, 201 + Math.max(- Date.now() + game.timer.timestampStart, -200));
 
 function initKGP() {
-	if (localStorage['zh.kgp.enable'] !== 'disable' && !KGPInterval) {
+	if (localStorage['zh.kgp.enable'] !== 'disable' && !window.KGPInterval) {
 		if (game.resPool) {
-			KGPInterval = setInterval(() => initKGPLeftColumn(), 200);
+			window.KGPInterval = setInterval(() => initKGPLeftColumn(), 200);
 		} else {
 			setTimeout(() => initKGP(), 500);
 		}
 	} else {
 		if (KGPInterval) {
 			clearInterval(KGPInterval);
-			KGPInterval = undefined;
+			window.KGPInterval = undefined;
 			initKGPLeftColumn(false);
 		}
 	}
@@ -34,15 +32,16 @@ function initKGPLeftColumn(enable = true) {
 		if (name === 'kittens') {return;}
 		let $row = $(item);
 		let res = resMap[name];
-		let maxAmount = res.maxValue;
-		let currentAmount = res.value;
-		KGP.changeCSS(currentAmount, maxAmount, $row);
+		if (res) {
+			let maxAmount = res.maxValue;
+			let currentAmount = res.value;
+			KGP.changeCSS(currentAmount, maxAmount, $row);
+		}
 	});
 	KGP.updateTooltip();
 }
 
-let KGP;
-KGP = {
+window.KGP = {
 	resMap : game.resPool.resourceMap,
 	resRow : undefined,
 	tool : undefined,
