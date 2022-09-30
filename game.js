@@ -591,7 +591,7 @@ dojo.declare("com.nuclearunicorn.game.EffectsManager", null, {
 				title: $I("effectsMgr.statics.coalRatioGlobal.title"),
 				resName: "coal",
 				type: "ratio",
-				calculation: "constant"
+				calculation: "nonProportional"
 			},
 
 			"coalRatioGlobalReduction" : {
@@ -1216,13 +1216,13 @@ dojo.declare("com.nuclearunicorn.game.EffectsManager", null, {
 			"hrProgress": {
 				title: $I("effectsMgr.statics.entangler-hrProgress.title"),
 				type: "ratio",
-				calculation: "constant"
+				calculation: "nonProportional"
 			},
 
 			"aiLevel" :  {
 				title: $I("effectsMgr.statics.aiLevel.title"),
 				type: "fixed",
-				calculation: "constant"
+				calculation: "nonProportional"
 			},
 
 			"gflopsConsumption" :  {
@@ -1233,19 +1233,19 @@ dojo.declare("com.nuclearunicorn.game.EffectsManager", null, {
 			"hashrate" :  {
 				title: $I("effectsMgr.statics.hashrate.title"),
 				type: "fixed",
-				calculation: "constant"
+				calculation: "nonProportional"
 			},
 
 			"nextHashLevelAt" :  {
 				title: $I("effectsMgr.statics.nextHashLevelAt.title"),
 				type: "fixed",
-				calculation: "constant"
+				calculation: "nonProportional"
 			},
 
 			"hashRateLevel" :  {
 				title: $I("effectsMgr.statics.hashrateLevel.title"),
 				type: "fixed",
-				calculation: "constant"
+				calculation: "nonProportional"
 			},
 
 			"corruptionBoostRatio": {
@@ -1596,7 +1596,7 @@ dojo.declare("com.nuclearunicorn.game.EffectsManager", null, {
 			"tradeKnowledgeRatio" :  {
 				title: $I("effectsMgr.statics.tradeKnowledgeRatio.title"),
 				type: "ratio",
-				calculation: "constant"
+				calculation: "nonProportional"
 			},
 			"steamworksFakeBought":{
 				title: $I("effectsMgr.statics.steamworksFakeBought.title")
@@ -1694,7 +1694,7 @@ dojo.declare("com.nuclearunicorn.game.EffectsManager", null, {
 			"activeHG":{
 				title: $I("effectsMgr.statics.activeHG.title"),
 				type: "fixed",
-				calculation: "constant"
+				calculation: "nonProportional"
 
 			}
 		}
@@ -3668,6 +3668,14 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 			type: "perYear",
 			value: this.getEffect(res.name + "Production")
 		});
+		if(resName == "antimatter" && this.resPool.energyProd < this.resPool.energyCons){
+
+			stack.push({
+				name: $I("ui.energy.tooltip"), //kinda hack text
+				type: "perYear",
+				value: -this.getEffect(res.name + "Production")
+			});
+		}
 		return stack;
 	},
 	getCMBRBonus: function() {
@@ -3850,7 +3858,12 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 	},
 	getResourceOnYearProduction: function(resName){
 		if (resName == "antimatter"){
-			return this.getEffect("antimatterProduction");
+			if(this.resPool.energyProd >= this.resPool.energyCons){
+				return this.getEffect("antimatterProduction");
+			}
+			else{
+				return 0;
+			}
 		}
 		return this.getEffect(resName + "Production"); //this might need to be changed!
 	},
@@ -3902,7 +3915,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 				|| this.getResourcePerTickConvertion(resRef.name) != 0
 				|| this.workshop.getEffectEngineer(resRef.name) != 0
 				|| this.getResourcePerDay(resRef.name) != 0
-				|| this.getResourceOnYearProduction(resRef.name) != 0
+				|| (this.getResourceOnYearProduction(resRef.name) != 0 || resRef.name == "antimatter")
 				|| (resRef.name == "kittens" && this.village.sim.kittens.length < this.village.sim.maxKittens)
 			){
 
@@ -3957,6 +3970,9 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 				resPerYear = this.getResourceOnYearProduction(res.name);
 				if (this.opts.usePercentageResourceValues){
 					resString += "<br> " + $I("res.netGain") + ": " + this.getDisplayValueExt(resPerYear, true, true);
+				}
+				if(res.name == "antimatter" && resPerYear && this.resPool.energyWinterProd < this.resPool.energyCons){
+					resString += "<br> " + $I("effectsMgr.winterEnergy.warning.title");
 				}
 			return resString;
 		}
