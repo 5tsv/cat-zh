@@ -598,7 +598,7 @@
 				<label id="optionHighlightUnavailable" for="highlightUnavailable">Highlight buildings limited by storage space</label>
 				<br>
 				<input id="set-ks-enable" type="checkbox">
-				<label id="ks-label" for="set-ks-enable" style="color:red;">启用小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
+				<label id="ks-label" for="set-ks-enable" style="color:red;">启用小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" onclick="if(!localStorage['zh.ks.enable']){localStorage['zh.ks.enable'] = 'enable';}" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
 				<!-- [<a href="https://gitee.com/likexia/cbc-kitten-scientists" target="_blank" style="color:blue;text-decoration:none;" title="点击查看">教程</a>] -->
 				<br>
 				<input id="set-kgp-enable" type="checkbox">
@@ -805,10 +805,18 @@
 					$('#ks-options').hide();
 					$("#ks-label").text("启用小猫珂学家");
 					return;
-				} else if (!localStorage['zh.ks.enable']) {
-					alert("第一次使用珂学家请点击说明书链接并参考\n下次打开游戏才会看到\n\n\n珂学家设置请根据自身实际情况调整，并不能做到满足所有人\n挂机推荐工艺项目默认设置能勾平衡尽量勾平衡\n文化、钛、科学爆仓属于正常现象\n还有问题或者建议，可以在猫国群找Cheney");
+				} else {
+					if (!localStorage['zh.ks.enable']) {
+						if (game.karmaKittens) {
+							enableKS();
+						    alert("第一次使用珂学家请点击说明书链接并参考\n下次打开游戏(刷新)才会看到\n\n\n珂学家默认小项目已经是挂机最效率，具体设置请根据自身实际情况调整，并不能做到满足所有人\n还有问题或者建议，可以在猫国群找Cheney");
+						} else {
+							alert('萌新建议看了珂学家说明书链接再使用');
+                        }
+					} else {
+						enableKS();
+                    }
 				}
-				enableKS();
 			});
 
 			var loadKGP = function () {
