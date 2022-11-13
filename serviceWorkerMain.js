@@ -57,10 +57,10 @@ self.addEventListener("activate", event => {
 			//);
 		//}).
 		caches.open(CACHE_NAME).then(function(cache) {
-			return cache.delete(locationUrl + 'index.html', {
+			return cache.delete(new Request(locationUrl + 'index.html'), {
 				ignoreSearch: true,
 			}).then(() => {
-				return cache.delete(locationUrl, {
+				return cache.delete(new Request(locationUrl), {
 					ignoreSearch: true,
 				});
 			});
@@ -70,7 +70,7 @@ self.addEventListener("activate", event => {
 			}).then(() => {
 				// 装新的sw
 				return self.clients.claim();
-			})
+			});
 		})
 	);
 });
@@ -108,6 +108,10 @@ self.addEventListener('fetch', function(event) {
 				return fetch(eventRequest, {
 					cache: 'no-cache',
 				}).then(function(responseFetch) {
+					// 404 返回build
+					if (buildJson && responseFetch.status === 404) {
+						return response;
+					}
 					if (!responseFetch || responseFetch.status !== 200 || responseFetch.type !== 'basic') {
 						return responseFetch;
 					}

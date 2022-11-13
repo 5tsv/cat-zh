@@ -6,6 +6,7 @@ function initKGP() {
 	if (localStorage['zh.kgp.enable'] !== 'disable' && !window.KGPInterval) {
 		if (game.resPool) {
 			window.KGPInterval = setInterval(() => initKGPLeftColumn(), 200);
+			$('<style type="text/css" id="KGPBorder">.res-table { border-spacing: 0px 3px; }</style>').appendTo('head');
 		} else {
 			setTimeout(() => initKGP(), 500);
 		}
@@ -14,6 +15,7 @@ function initKGP() {
 			clearInterval(KGPInterval);
 			window.KGPInterval = undefined;
 			initKGPLeftColumn(false);
+			document.getElementById("KGPBorder").remove();
 		}
 	}
 }
@@ -29,7 +31,7 @@ function initKGPLeftColumn(enable = true) {
 		}
 
 		let name = item.className.split(' ')[1].substring(9);
-		if (name === 'kittens') {return;}
+		if (name === 'kittens' || name === 'zebras') {return;}
 		let $row = $(item);
 		let res = resMap[name];
 		if (res) {

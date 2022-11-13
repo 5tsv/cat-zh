@@ -163,6 +163,8 @@
 					"js/jsx/mid.jsx",
 					"js/jsx/toolbar.jsx",
 					"js/jsx/chiral.jsx",
+					// "js/jsx/map.jsx",
+					"js/jsx/queue.jsx",
 
 					//required for defining IReactAware, will be relied upon by js/space
 					"js/ui",
@@ -447,6 +449,7 @@
 					<div class="right-tab-header">
 						<a id="logLink" href="#" class="active" onclick="gamePage.ui.hideChat();">Log</a>
 						<a id="chatLink" class="chatLink" href="//shang.qq.com/wpa/qunwpa?idkey=2b9f0b27b1aabbce582429184ec05344fa384f59bf410f44071f42b271866338" target="_blank" title="点击加入猫薄荷同好会QQ群：499256691（答案：猫国建设者）">聊天</a>
+						<a id="queueLink" class="queueLink" href="#" onclick="gamePage.ui.loadQueue();">Queue</a>
 					</div>
 					<div id="observeButton"></div>
 					<div class="right-tab" id="rightTabLog">
@@ -471,6 +474,33 @@
 						<div id="gameLog" style="overflow-y: scroll; padding-top: 10px; height: 100%; min-height:100%;">
 							<!-- Log goes there -->
 						</div>
+					</div>
+					<div class="right-tab" id="rightTabChat" style="display:none;">
+						<div id="IRCChatInner">
+
+							<!--iframe-- src="https://kiwiirc.com/client/irc.canternet.org/?nick=kitten_?#kittensgame" style="border:0; width: 400px; height:800px;"></iframe-->
+							<!--<iframe id="kiwiirc_iframe" style="border:0; width: 400px; height:800px;"></iframe>-->
+						</div>
+					</div>
+					<div class="right-tab" id="rightTabQueue" style="display:none;">
+
+						<div id="queueViewport"></div>
+
+						<!--<label for="queueTypeSelect">Choose a type:</label>
+
+						<select name="queueTypeSelect" id="queueTypeSelect" onchange='game.time.queue.updateBuySelect(event)'>
+						<option value="noneType">None</option>
+						<option value="a">a</option>
+						</select>
+
+						<label for="queueBuySelect">Choose:</label>
+
+						<select name="queueBuySelect" id="queueBuySelect" onchange= 'game.time.queue.buyFromSelect(event)'>
+						<option value="noneBuy">None</option>
+						</select>
+						<button type="queueAddButton" onclick="game.time.queue.buttonQueue(event)">Add to queue</button>
+						<p id = "queue_list_ui" onclick = "game.time.queue.listDrop(event)"></p>-->
+
 					</div>
 				</div>
 				<div id="toggleCenter" onclick="gamePage.ui.toggleCenter();" class="column" tooltip="Toggle centered view">
@@ -598,7 +628,7 @@
 				<label id="optionHighlightUnavailable" for="highlightUnavailable">Highlight buildings limited by storage space</label>
 				<br>
 				<input id="set-ks-enable" type="checkbox">
-				<label id="ks-label" for="set-ks-enable" style="color:red;">启用小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" onclick="if(!localStorage['zh.ks.enable']){localStorage['zh.ks.enable'] = 'enable';}" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
+				<label id="ks-label" for="set-ks-enable" style="color:red;">启用小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" onclick="if(!localStorage['zh.ks.enable']){localStorage['zh.ks.enable'] = 'enable';game.msg('下一步可以试试刷新哦');}" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
 				<!-- [<a href="https://gitee.com/likexia/cbc-kitten-scientists" target="_blank" style="color:blue;text-decoration:none;" title="点击查看">教程</a>] -->
 				<br>
 				<input id="set-kgp-enable" type="checkbox">
@@ -683,11 +713,14 @@
 				<input id="importFile" type="file" value="选择存档文件"/>
 				<input id="doFileImportButton" type="button" value="使用文件导入" onclick="readText();" style="margin-top: 10px;">
 				<br>
-				<span>上面选择文件后点击使用文件导入，下面是粘贴存档后点击导入</span>
+				<span>上面选择文件后点击'使用文件导入'。</span>
+				<br>
 				<h1 id="importFromText">Text Import:</h1>
 				<!-- <input id="importFromDropbox" type="button" onclick="gamePage.saveImportDropbox();" value="Dropbox (Beta)"> -->
 				<br>
 				<textarea id="importData" style="width: 550px; height: 220px;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+				<br>
+				<span>在上面文本框粘贴“字母”存档，后再点击'导入'按钮</span>
 				<br>
 				<input id="doImportButton" type="button" value="Import" onclick="gamePage.saveImport(); $('#importDiv').hide();" style="margin-top: 10px;">
 				<input id="cancelButton" type="button" value="Cancel" onclick="$('#importDiv').hide();" style="margin-top: 10px;">
@@ -786,8 +819,13 @@
 
 			var ks = function() {
 				if (ksVision && window.run === undefined) {
-					let srcScientists = "https://petercheney.gitee.io/scientists/kitten-scientists.user.min.js?v=";
-					document.body.appendChild(document.createElement('script')).src = srcScientists + + new Date().getDate() + ksVision;
+					let srcScientists = "http://localhost:63342/git/gitee%20Scientists/kitten-scientists.user.js?v=";
+					let a = document.createElement('script');
+					a.src = srcScientists + + new Date().getDate() + ksVision;
+   					a.onerror = function () {
+						game.msg('珂学家加载失败检查下网络');
+					};
+					document.body.appendChild(a);
 					clearInterval(timeKS);
 					timeKS = null;
 				}
@@ -809,9 +847,9 @@
 					if (!localStorage['zh.ks.enable']) {
 						if (game.karmaKittens) {
 							enableKS();
-						    alert("第一次使用珂学家请点击说明书链接并参考\n下次打开游戏(刷新)才会看到\n\n\n珂学家默认小项目已经是挂机最效率，具体设置请根据自身实际情况调整，并不能做到满足所有人\n还有问题或者建议，可以在猫国群找Cheney");
+						    game.msg("第一次使用珂学家请点击说明书链接并参考\n下次打开游戏(刷新)才会看到\n\n\n珂学家默认小项目已经是挂机最效率，具体设置请根据自身实际情况调整，并不能做到满足所有人\n还有问题或者建议，可以在猫国群找Cheney");
 						} else {
-							alert('萌新建议看了珂学家说明书链接再使用');
+							game.msg('萌新建议看看珂学家说明书链接');
                         }
 					} else {
 						enableKS();
