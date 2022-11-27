@@ -28,7 +28,7 @@ dojo.declare("classes.managers.TimeManager", com.nuclearunicorn.core.TabManager,
             heat: this.heat,
             testShatter: this.testShatter, //temporary
             isAccelerated: this.isAccelerated,
-            cfu: this.filterMetadata(this.chronoforgeUpgrades, ["name", "val", "on", "heat", "unlocked"]),
+            cfu: this.filterMetadata(this.chronoforgeUpgrades, ["name", "val", "on", "heat", "unlocked", "isAutomationEnabled"]),
             vsu: this.filterMetadata(this.voidspaceUpgrades, ["name", "val", "on"]),
             queueItems: this.queue.queueItems,
             queueLength: this.queue.queueLength,
@@ -446,7 +446,7 @@ dojo.declare("classes.managers.TimeManager", com.nuclearunicorn.core.TabManager,
         },
         calculateEffects: function(self, game){
             if (self.val > 0){
-                game.time.queue.queueSources["voidSpace"] = true;
+                game.time.queue.unlockQueueSource("voidSpace");
             }
         },
         unlocked: false
@@ -1771,13 +1771,13 @@ dojo.declare("classes.queue.manager", null,{
                 }
                 return options;
             case "spaceMission":
-                var spaceMissions = this.game.space.planets;
+                var spaceMissions = this.game.space.programs;
                 for (var i in spaceMissions){
-                    var planet = spaceMissions[i];
-                    if (planet.unlocked && !planet.reached){
+                    var program = spaceMissions[i];
+                    if (program.unlocked && !program.val){
                         options.push({
-                            name: planet.name,
-                            label: planet.label
+                            name: program.name,
+                            label: program.label
                         });
                     }
                 }
@@ -1820,6 +1820,7 @@ dojo.declare("classes.queue.manager", null,{
         }
         else{
             this.queueItems.shift();
+            this.game._publish("ui/update", this.game);
         }
     },
     listDrop: function(event){

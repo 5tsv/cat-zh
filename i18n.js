@@ -74,7 +74,8 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 			return this._deffered.promise();
 		}
 		// check if user already selected the locale
-		var lang = LCstorage["com.nuclearunicorn.kittengame.language"];
+		// var lang = LCstorage["com.nuclearunicorn.kittengame.language"];
+		var lang;
 		if (!lang || !this.isAvailable(lang)) {
 
 			//console.log("navigator:", navigator, "platform:", this.platformLocale);
@@ -103,9 +104,9 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 			if (lang == "zh") {
 				$.getJSON( "res/i18n/crowdin/" + lang + ".json?_=" + timestamp).then(function(crowdinLocale){
 					console.log("loaded crowdin locale for lang", lang, crowdinLocale);
-				
+
 					$.extend(self.messages, crowdinLocale);
-			
+
 					self._deferred.resolve();
 				}).fail(function(){
 					console.log("legacyLocale:", "zh");

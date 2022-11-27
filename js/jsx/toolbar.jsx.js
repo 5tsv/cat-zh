@@ -592,7 +592,7 @@ WCloudSaveRecord = React.createClass({
                         //(pushMetadata should return a new save snapshot)
                         self.forceUpdate();
                     });
-                }}, "待更新")
+                }}, "归档")
         ]);
     }
 })

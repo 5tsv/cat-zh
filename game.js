@@ -2275,19 +2275,32 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 			lastBackup: this.lastBackup
 		};
 
-		var saveDataString = JSON.stringify(saveData);
-		//5mb limit workaround
-		if (saveDataString.length > 4990000 || this.opts.forceLZ) {
-			console.log("compressing the save file...");
-			saveDataString = this.compressLZData(saveDataString, true);
-		}
-
+		var saveDataString = this._prepareSaveData(saveData);
 		LCstorage["com.nuclearunicorn.kittengame.savedata"] = saveDataString;
 		//console.log("Game saved");
 
 		this.ui.save();
 
 		return saveData;
+	},
+
+	_prepareSaveData: function(saveData) {
+		// Allow external scripts to consume the `game/beforesave` event to manipulate
+		// this save data state.
+		// This event is currently entirely for external consumers.
+		this._publish("game/beforesave", saveData);
+
+		return this._saveDataToString(saveData);
+	},
+
+	_saveDataToString: function(saveData) {
+		var saveDataString = JSON.stringify(saveData);
+		//5mb limit workaround
+		if (saveDataString.length > 5000000 || this.opts.forceLZ) {
+			console.log("compressing the save file...");
+			saveDataString = this.compressLZData(saveDataString, true);
+		}
+		return saveDataString;
 	},
 
 	_wipe: function(){
@@ -2490,6 +2503,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 		this.village.updateResourceProduction();
 		this.updateCaches();
 		this.resPool.update();
+		this.updateWinterCatnip();
 		this.loadingSave = false;
 
 		return success;
@@ -4878,7 +4892,9 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 		if (anachronomancy.researched){
 			saveData.science.techs.push(this.science.get("chronophysics"));
 		}
-		LCstorage["com.nuclearunicorn.kittengame.savedata"] = JSON.stringify(saveData);
+
+		var saveDataString = this._prepareSaveData(saveData);
+		LCstorage["com.nuclearunicorn.kittengame.savedata"] = saveDataString;
 
 		// Hack to prevent an autosave from occurring before the reload completes
 		this.isPaused = true;
@@ -5292,7 +5308,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 
 	isEldermass: function(){
 		var boolean = false;
-		/*var date = new Date();
+		var date = new Date();
         if (date.getMonth() == 11 && date.getDate() >= 15 && date.getDate() <= 31) {
 			var LS = (localStorage["time"]) ? new Date(localStorage["time"]) : false;
             if (LS) {
@@ -5318,10 +5334,6 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 				});
 			}
 		}
-        date = null;
-        LS = null;
-        a = null;
-		*/
 		return boolean;
 	},
 	createRandomName: function(lenConst, charPool) {
