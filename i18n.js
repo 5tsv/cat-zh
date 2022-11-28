@@ -74,8 +74,7 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 			return this._deffered.promise();
 		}
 		// check if user already selected the locale
-		// var lang = LCstorage["com.nuclearunicorn.kittengame.language"];
-		var lang;
+		var lang = LCstorage["com.nuclearunicorn.kittengame.language"];
 		if (!lang || !this.isAvailable(lang)) {
 
 			//console.log("navigator:", navigator, "platform:", this.platformLocale);
@@ -91,6 +90,9 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 				}
 			}
 			LCstorage["com.nuclearunicorn.kittengame.language"] = lang;
+		}
+		if (lang !== 'en' || lang !== 'zh' || !lang !== 'zht') {
+			lang = 'zh';
 		}
 		// at this point we always have correct lang selected
 		this.language = lang;
