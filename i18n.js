@@ -91,7 +91,7 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 			}
 			LCstorage["com.nuclearunicorn.kittengame.language"] = lang;
 		}
-		if (lang !== 'en' || lang !== 'zh' || !lang !== 'zht') {
+		if (lang !== 'en' && lang !== 'zh' && lang !== 'zht') {
 			lang = 'zh';
 		}
 		// at this point we always have correct lang selected
