@@ -5312,11 +5312,12 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
         if (date.getMonth() == 11 && date.getDate() >= 15 && date.getDate() <= 31) {
 			var LS = (localStorage["time"]) ? new Date(localStorage["time"]) : false;
             if (LS) {
-                if (LS.getFullYear() == date.getFullYear() &&LS. getMonth() == 11 && LS.getDate() >= 15 && LS.getDate() <= 31) {
+                if (LS.getFullYear() == date.getFullYear() && LS.getMonth() == 11 && LS.getDate() >= 15 && LS.getDate() <= 31) {
                     boolean = true;
+                } else {
+					delete localStorage["time"];
                 }
-            }
-			if (!LS) {
+            } else {
 				$.ajax({
 					cache: false,
 					type: "GET",
@@ -5332,7 +5333,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 						}
 					}
 				});
-			}
+            }
 		}
 		return boolean;
 	},

@@ -103,7 +103,7 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 		// fallback
 		$.getJSON( "res/i18n/" + this.fallbackLocale + ".json?_=" + timestamp).done(function(fallbackLocale){
 			self.messages = fallbackLocale;
-			if (lang == "zh") {
+			if (lang == "zh" || lang == "zht") {
 				$.getJSON( "res/i18n/crowdin/" + lang + ".json?_=" + timestamp).then(function(crowdinLocale){
 					console.log("loaded crowdin locale for lang", lang, crowdinLocale);
 
