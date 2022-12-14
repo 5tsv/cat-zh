@@ -5323,7 +5323,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 					type: "GET",
 					dataType: "JSON",
 					crossDomain: true,
-					url: "http://worldtimeapi.org/api/ip/"
+					url: "https://worldtimeapi.org/api/ip/"
 				}).done(function(resp) {
 					if (resp) {
 						var time = new Date(resp.datetime);
