@@ -2275,13 +2275,14 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 			lastBackup: this.lastBackup
 		};
 
-		var saveDataString = this._prepareSaveData(saveData);
+		var preparedSaveData = this._prepareSaveData(saveData);
+		var saveDataString = this._saveDataToString(preparedSaveData);
 		LCstorage["com.nuclearunicorn.kittengame.savedata"] = saveDataString;
 		//console.log("Game saved");
 
 		this.ui.save();
 
-		return saveData;
+		return preparedSaveData;
 	},
 
 	_prepareSaveData: function(saveData) {
@@ -2290,7 +2291,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 		// This event is currently entirely for external consumers.
 		this._publish("game/beforesave", saveData);
 
-		return this._saveDataToString(saveData);
+		return saveData;
 	},
 
 	_saveDataToString: function(saveData) {
@@ -4893,7 +4894,8 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 			saveData.science.techs.push(this.science.get("chronophysics"));
 		}
 
-		var saveDataString = this._prepareSaveData(saveData);
+		var preparedSaveData = this._prepareSaveData(saveData);
+		var saveDataString = this._saveDataToString(preparedSaveData);
 		LCstorage["com.nuclearunicorn.kittengame.savedata"] = saveDataString;
 
 		// Hack to prevent an autosave from occurring before the reload completes
@@ -5308,33 +5310,33 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 
 	isEldermass: function(){
 		var boolean = false;
-		var date = new Date();
-        if (date.getMonth() == 11 && date.getDate() >= 15 && date.getDate() <= 31) {
-			var LS = (localStorage["time"]) ? new Date(localStorage["time"]) : false;
-            if (LS) {
-                if (LS.getFullYear() == date.getFullYear() && LS.getMonth() == 11 && LS.getDate() >= 15 && LS.getDate() <= 31) {
-                    boolean = true;
-                } else {
-					delete localStorage["time"];
-                }
-            } else {
-				$.ajax({
-					cache: false,
-					type: "GET",
-					dataType: "JSON",
-					crossDomain: true,
-					url: "https://worldtimeapi.org/api/ip/"
-				}).done(function(resp) {
-					if (resp) {
-						var time = new Date(resp.datetime);
-						localStorage["time"] = time.getMonth() + 1 + " " + time.getDate() + "," + time.getFullYear();
-						if (time.getMonth() == 11 && time.getDate() >= 15 && time.getDate() <= 31) {
-							boolean = true;
-						}
-					}
-				});
-            }
-		}
+		// var date = new Date();
+        // if (date.getMonth() == 11 && date.getDate() >= 15 && date.getDate() <= 31) {
+		// 	var LS = (localStorage["time"]) ? new Date(localStorage["time"]) : false;
+        //     if (LS) {
+        //         if (LS.getFullYear() == date.getFullYear() && LS.getMonth() == 11 && LS.getDate() >= 15 && LS.getDate() <= 31) {
+        //             boolean = true;
+        //         } else {
+		// 			delete localStorage["time"];
+        //         }
+        //     } else {
+		// 		$.ajax({
+		// 			cache: false,
+		// 			type: "GET",
+		// 			dataType: "JSON",
+		// 			crossDomain: true,
+		// 			url: "https://worldtimeapi.org/api/ip/"
+		// 		}).done(function(resp) {
+		// 			if (resp) {
+		// 				var time = new Date(resp.datetime);
+		// 				localStorage["time"] = time.getMonth() + 1 + " " + time.getDate() + "," + time.getFullYear();
+		// 				if (time.getMonth() == 11 && time.getDate() >= 15 && time.getDate() <= 31) {
+		// 					boolean = true;
+		// 				}
+		// 			}
+		// 		});
+        //     }
+		// }
 		return boolean;
 	},
 	createRandomName: function(lenConst, charPool) {
