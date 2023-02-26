@@ -77,6 +77,10 @@ dojo.declare("classes.managers.TimeManager", com.nuclearunicorn.core.TabManager,
         this.queue.queueItems = saveData["time"].queueItems || [];
         this.queue.queueLength = saveData["time"].queueLength || this.queue.queueItems.length;
         this.queue.queueSources = saveData["time"].queueSources || this.queue.queueSourcesDefault;
+        if (this.queue.queueSources === {} || typeof(this.queue.queueSources["buildings"]) != "boolean") {
+            this.queue.queueSources = this.queue.queueSourcesDefault;
+        }
+        this.queue.alphabeticalSort = saveData["time"].queueAlphabeticalSort;
         for (var i in this.queue.queueSourcesDefault){
             if (this.queue.queueSources[i] === undefined){
                 this.queue.queueSources[i] = this.queue.queueSourcesDefault[i];
@@ -1505,11 +1509,26 @@ dojo.declare("classes.tab.TimeTab", com.nuclearunicorn.game.ui.tab, {
 
 dojo.declare("classes.queue.manager", null,{
     game: null,
+    alphabeticalSort: true,
     queueItems : [],
+
+    toggleAlphabeticalSort: function(){
+        this.alphabeticalSort = !this.alphabeticalSort;
+    },
     updateQueueSourcesArr: function(){
         for (var i in this.queueSources){
-            if(!this.queueSourcesArr.includes(i) && this.queueSources[i]){
-                this.queueSourcesArr.push(i);
+            if (!this.queueSources[i]){
+                continue;
+            }
+            var add_to_arr = true;
+            for (var el in this.queueSourcesArr){
+                if (this.queueSourcesArr[el].name == i){
+                    add_to_arr = false;
+                    break;
+                }
+            }
+            if(add_to_arr){
+                this.queueSourcesArr.push({name: i, label: this.queueLabels[i]});
             }
         }
         self.queueSourcesArr;
@@ -1518,21 +1537,35 @@ dojo.declare("classes.queue.manager", null,{
                     "spaceBuilding","chronoforge", "voidSpace", "zigguratUpgrades",  
                     "religion", "upgrades", "zebraUpgrades", "transcendenceUpgrades"],*/
     //queueSources: ["buildings", "spaceBuilding", "zigguratUpgrades", "transcendenceUpgrades"],
-    queueSourcesArr:["buildings"],
-    queueSourcesDefault: { 
-                    "buildings": true, 
-                    "tech": false,
-                    "upgrades": false,
-                    "policies": false,
-                    "religion": false,
-                    "zebraUpgrades": false,
-                    "spaceMission": false,
-                    "spaceBuilding": false,
-                    "zigguratUpgrades": false,
-                    "transcendenceUpgrades": false,
-                    "chronoforge": false,
-                    "voidSpace": false,
-                },
+    queueLabels: {
+        "buildings" : $I("buildings.tabName"),
+        "tech" : $I("techs.panel.label"),
+        "upgrades" : $I("workshop.upgradePanel.label"),
+        "policies" : $I("policy.panel.label"),
+        "religion" : $I("religion.panel.orderOfTheSun.label"),
+        "zebraUpgrades" : $I("workshop.zebraUpgradesPanel.label"),
+        "spaceMission" : $I("space.ground.control.label"),
+        "spaceBuilding" : $I("tab.name.space"),
+        "zigguratUpgrades" : $I("religion.panel.ziggurat.label"),
+        "transcendenceUpgrades" : $I("religion.panel.cryptotheology.label"),
+        "chronoforge" : $I("workshop.chronoforge.label"),
+        "voidSpace" : $I("science.voidSpace.label"),
+    },
+    queueSourcesArr: [{name: "buildings", label: $I("buildings.tabName")}],
+    queueSourcesDefault: {
+        "buildings": true, 
+        "tech": false,
+        "upgrades": false,
+        "policies": false,
+        "religion": false,
+        "zebraUpgrades": false,
+        "spaceMission": false,
+        "spaceBuilding": false,
+        "zigguratUpgrades": false,
+        "transcendenceUpgrades": false,
+        "chronoforge": false,
+        "voidSpace": false,
+        },
     queueSources: {},
     queueNonStabkable:[
         "tech", "upgrades", "policies", "zebraUpgrades", "spaceMission"
@@ -1540,8 +1573,7 @@ dojo.declare("classes.queue.manager", null,{
     unlockQueueSource: function(source){
         if(this.queueSources[source] === false){
             this.queueSources[source] = true;
-            this.queueSourcesArr.push(source);
-            this.game._publish("ui/update", this.game);
+            this.queueSourcesArr.push({name: source, label: this.queueLabels[source]});
         }
     },
     cap: 0,
@@ -1638,11 +1670,44 @@ dojo.declare("classes.queue.manager", null,{
      *      name: <queue item name>,
      *      label: <display label>
      * }]
+     * based on game.time.queue.alphabeticalSort
      * 
      * @param {*} type: queue type (buildings, upgrades, etc.). See game.time.queue.queueSources
      * @returns 
      */
     getQueueOptions: function(type){
+        if (this.alphabeticalSort){
+            return this.getQueueOptionsAlphabetical(type);
+        }else{
+            return this.getQueueOptionsUnsorted(type);
+        }
+    },
+    /**
+     * Return sorted list of sub-options for a building queue
+     * in a form of [{
+     *      name: <queue item name>,
+     *      label: <display label>
+     * }]
+     *
+     * 
+     * @param {*} type: queue type (buildings, upgrades, etc.). See game.time.queue.queueSources
+     * @returns 
+     */
+    getQueueOptionsAlphabetical: function(type){
+        return this.getQueueOptionsUnsorted(type).sort(function(a, b) { return a.label.localeCompare(b.label);});
+    },
+    
+    /**
+     * Return unsorted list of sub-options for a building queue
+     * in a form of [{
+     *      name: <queue item name>,
+     *      label: <display label>
+     * }]
+     * 
+     * @param {*} type: queue type (buildings, upgrades, etc.). See game.time.queue.queueSources
+     * @returns 
+     */
+    getQueueOptionsUnsorted: function(type){
         var options = [];
         switch (type){
             case "buildings":

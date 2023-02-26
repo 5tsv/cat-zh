@@ -36,7 +36,7 @@ WQueue = React.createClass({
             }
         }*/
         for (var i in queueSources){
-                options.push($r("option", { value: queueSources[i]}, queueSources[i]));
+            options.push($r("option", { value: queueSources[i].name}, queueSources[i].label));
         }
         return $r("select", {
             value: this.state.queueTypeId,
@@ -126,7 +126,10 @@ WQueue = React.createClass({
             items
         );
     },
-
+    toggleAlphabetical: function(){
+        game.time.queue.toggleAlphabeticalSort();
+        this.render();
+    },
     render: function(){
         var self = this;
 
@@ -160,6 +163,16 @@ WQueue = React.createClass({
                     self.forceUpdate();
                 }
             }, "加入队列"),
+
+            $r("div", {className:"alphabetical-toggle"}, [
+                $r("input", {
+                    type:"checkbox", 
+                    checked: game.time.queue.alphabeticalSort,
+                    onClick: self.toggleAlphabetical,
+                    style:{display:"inline-block"},
+                }),
+                $I("queue.alphabeticalToggle")
+            ]),
 
             this.getQueueItems()
         ]);

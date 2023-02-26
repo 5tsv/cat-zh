@@ -258,6 +258,9 @@ dojo.declare("classes.managers.SpaceManager", com.nuclearunicorn.core.TabManager
                 policies:["outerSpaceTreaty","militarizeSpace"]
             },
 			calculateEffects: function(self, game){
+				if (self.val > 0){
+					game.time.queue.unlockQueueSource("spaceBuilding");
+				}
                 var observatoryRatioTemp = 0.05 * (1 + game.getEffect("satelliteSynergyBonus"));
 				self.effects = {
 					"observatoryRatio": observatoryRatioTemp,
@@ -855,10 +858,10 @@ dojo.declare("classes.managers.SpaceManager", com.nuclearunicorn.core.TabManager
 				requiredTech: ["quantumCryptography"],
 				effects: {
 					"gflopsConsumption": 0.1,
-					"hashrate": 0,
-					"hashRateLevel": 0,
-					"nextHashLevelAt": 0,
-					"hrProgress": 0,
+					// "hashrate": 0,
+					// "hashRateLevel": 0,
+					// "nextHashLevelAt": 0,
+					// "hrProgress": 0,
 					"energyConsumption": 25
 				},
 				action: function(self, game){
