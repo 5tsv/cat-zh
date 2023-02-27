@@ -713,8 +713,8 @@ dojo.declare("classes.managers.SpaceManager", com.nuclearunicorn.core.TabManager
 						//todo: consider boosting relic stations is over 5000
 					}
 
-					var entBoost = (1 + game.space.getBuilding("entangler").effects["hashRateLevel"] * 0.25);	//25% per entangler hashrate
-
+					// 1 + game.space.getBuilding("entangler").effects["hashRateLevel"] * 0.25
+					var entBoost = (1 + Math.floor(Math.log(game.resPool.get("hashrates").value * 0.001) / Math.log(1.6)) * 0.25);	//25% per entangler hashrate
 					self.effects = {
 						"scienceMax": 25000 * (1 + game.getEffect("spaceScienceRatio")),
 						"starchartPerTickBaseSpace": 0.025,
