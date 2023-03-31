@@ -1585,7 +1585,7 @@ dojo.declare("classes.queue.manager", null,{
         
     },
     calculateCap: function(){
-        return this.game.bld.getBuildingExt("aiCore").meta.on + this.game.space.getBuilding("entangler").effects["hashRateLevel"] + this.baseCap + this.game.getEffect("queueCap");
+        return this.game.bld.getBuildingExt("aiCore").meta.on + (this.game.space.getBuilding("entangler").effects["hashRateLevel"] || 0) + this.baseCap + this.game.getEffect("queueCap");
     },
 
     addToQueue: function(name, type, label, shiftKey){

@@ -2501,6 +2501,8 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 		}
 
 		this.ui.load();
+		game.updateKarma();
+		this.village.update();
 		this.village.updateResourceProduction();
 		this.updateCaches();
 		this.resPool.update();
