@@ -808,7 +808,7 @@ dojo.declare("classes.managers.TimeManager", com.nuclearunicorn.core.TabManager,
                     if (aiApocalypseLevel && res.aiCanDestroy){
                         //console.log(res.name);
                         var oldVal = res.value - delta[res.name];
-                        delta[res.name]/= yearsInCurrentCycle||1;  
+                        delta[res.name]/= yearsInCurrentCycle||1;
                         if(resLimit == res.MaxValue && oldVal + delta[res.name] - (oldVal + delta[res.name]) * aiDestructionMod >= resLimit){
                             resLimit = Math.min(resLimit, res.value) * (1 + aiDestructionMod);
                         }else if (!res.maxValue){
@@ -1534,7 +1534,7 @@ dojo.declare("classes.queue.manager", null,{
         self.queueSourcesArr;
     },
     /*queueSources : ["policies", "tech", "buildings", "spaceMission",
-                    "spaceBuilding","chronoforge", "voidSpace", "zigguratUpgrades",  
+                    "spaceBuilding","chronoforge", "voidSpace", "zigguratUpgrades",
                     "religion", "upgrades", "zebraUpgrades", "transcendenceUpgrades"],*/
     //queueSources: ["buildings", "spaceBuilding", "zigguratUpgrades", "transcendenceUpgrades"],
     queueLabels: {
@@ -1553,7 +1553,7 @@ dojo.declare("classes.queue.manager", null,{
     },
     queueSourcesArr: [{name: "buildings", label: $I("buildings.tabName")}],
     queueSourcesDefault: {
-        "buildings": true, 
+        "buildings": true,
         "tech": false,
         "upgrades": false,
         "policies": false,
@@ -1582,10 +1582,10 @@ dojo.declare("classes.queue.manager", null,{
 
     constructor: function(game){
         this.game = game;
-        
+
     },
     calculateCap: function(){
-        return this.game.bld.getBuildingExt("aiCore").meta.on + (this.game.space.getBuilding("entangler").effects["hashRateLevel"] || 0) + this.baseCap + this.game.getEffect("queueCap");
+        return this.game.bld.getBuildingExt("aiCore").meta.on + this.game.space.getBuilding("entangler").effects["hashRateLevel"] + this.baseCap + this.game.getEffect("queueCap");
     },
 
     addToQueue: function(name, type, label, shiftKey){
@@ -1671,9 +1671,9 @@ dojo.declare("classes.queue.manager", null,{
      *      label: <display label>
      * }]
      * based on game.time.queue.alphabeticalSort
-     * 
+     *
      * @param {*} type: queue type (buildings, upgrades, etc.). See game.time.queue.queueSources
-     * @returns 
+     * @returns
      */
     getQueueOptions: function(type){
         if (this.alphabeticalSort){
@@ -1689,23 +1689,23 @@ dojo.declare("classes.queue.manager", null,{
      *      label: <display label>
      * }]
      *
-     * 
+     *
      * @param {*} type: queue type (buildings, upgrades, etc.). See game.time.queue.queueSources
-     * @returns 
+     * @returns
      */
     getQueueOptionsAlphabetical: function(type){
         return this.getQueueOptionsUnsorted(type).sort(function(a, b) { return a.label.localeCompare(b.label);});
     },
-    
+
     /**
      * Return unsorted list of sub-options for a building queue
      * in a form of [{
      *      name: <queue item name>,
      *      label: <display label>
      * }]
-     * 
+     *
      * @param {*} type: queue type (buildings, upgrades, etc.). See game.time.queue.queueSources
-     * @returns 
+     * @returns
      */
     getQueueOptionsUnsorted: function(type){
         var options = [];

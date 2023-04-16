@@ -13,7 +13,7 @@ const cdnCache = [
 	strap + "themes/litera.min.css",
 	strap + "themes/bootstrap-responsive.min.css",
 ];
-const version = 1;
+const version = 2;
 
 // const urlsToCache = [
 // 	locationUrl,

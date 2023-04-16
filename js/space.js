@@ -713,8 +713,8 @@ dojo.declare("classes.managers.SpaceManager", com.nuclearunicorn.core.TabManager
 						//todo: consider boosting relic stations is over 5000
 					}
 
-					// 1 + game.space.getBuilding("entangler").effects["hashRateLevel"] * 0.25
-					var entBoost = (1 + Math.floor(Math.log(game.resPool.get("hashrates").value * 0.001 + 1) / Math.log(1.6)) * 0.25);	//25% per entangler hashrate
+					var entBoost = (1 + game.space.getBuilding("entangler").effects["hashRateLevel"] * 0.25);	//25% per entangler hashrate
+
 					self.effects = {
 						"scienceMax": 25000 * (1 + game.getEffect("spaceScienceRatio")),
 						"starchartPerTickBaseSpace": 0.025,
@@ -858,10 +858,10 @@ dojo.declare("classes.managers.SpaceManager", com.nuclearunicorn.core.TabManager
 				requiredTech: ["quantumCryptography"],
 				effects: {
 					"gflopsConsumption": 0.1,
-					// "hashrate": 0,
-					// "hashRateLevel": 0,
-					// "nextHashLevelAt": 0,
-					// "hrProgress": 0,
+					"hashrate": 0,
+					"hashRateLevel": 0,
+					"nextHashLevelAt": 0,
+					"hrProgress": 0,
 					"energyConsumption": 25
 				},
 				action: function(self, game){
@@ -957,6 +957,15 @@ dojo.declare("classes.managers.SpaceManager", com.nuclearunicorn.core.TabManager
 				if (!building.effects){
 					return 0;
 				} else {
+					//There are 4 specially calculated effects that aren't supposed to be multiplied by the number of buildings,
+					//because they're properties of the building category as a whole, not any individual building.
+					if (effectName === "hashrate" || effectName === "hashRateLevel" ||
+					    effectName === "nextHashLevelAt" || effectName === "hrProgress")
+					{
+						//For these 4 specially calculated effects, don't multiply by building.on and don't apply spaceRatio.
+						return building.effects[effectName];
+					}
+					//Else, this isn't one of the special effects, so compute it normally.
 					var spaceRatio = (effectName == "spaceRatio" && game.resPool.energyCons > game.resPool.energyProd) ? game.resPool.getEnergyDelta() : 1;
 					return building.effects[effectName] * building.on * spaceRatio;
 				}
