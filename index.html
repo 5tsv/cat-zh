@@ -85,7 +85,7 @@
 
 		<script type="text/javascript">
 
-			var version = "1490";
+			var version = "1492";
 
 			var buildRevision = 0;
 			var ksVision = 0;
@@ -280,17 +280,10 @@
 					gamePage.start();
 
 					var config = new classes.KGConfig();
-					if (gamePage.isEldermass()) {
-						if (gamePage.resPool.get("elderBox").value == 0) {
-							gamePage.resPool.get("elderBox").value++;
-							gamePage.msg($I("gift.get"), "important");
-						}
-					} else {
-						if (gamePage.resPool.get("elderBox").value > 0 && gamePage.resPool.get("elderBox").value < 1) {
-							gamePage.resPool.get("elderBox").value = 1;
-							gamePage.msg($I("gift.repaired"), "important");
-						}
-					}
+
+					//update eldermass gifts on every game load pass
+					//TODO: toggle timer in the background?
+					gamePage.checkEldermass();
 					//---------------------------------
 
 
@@ -475,6 +468,9 @@
 							<!-- Log goes there -->
 						</div>
 					</div>
+					<div class="right-tab" id="rightTabQueue" style="display:none;">
+						<div id="queueViewport"></div>
+					</div>
 					<div class="right-tab" id="rightTabChat" style="display:none;">
 						<div id="IRCChatInner">
 
@@ -482,28 +478,10 @@
 							<!--<iframe id="kiwiirc_iframe" style="border:0; width: 400px; height:800px;"></iframe>-->
 						</div>
 					</div>
-					<div class="right-tab" id="rightTabQueue" style="display:none;">
-
-						<div id="queueViewport"></div>
-
-						<!--<label for="queueTypeSelect">Choose a type:</label>
-
-						<select name="queueTypeSelect" id="queueTypeSelect" onchange='game.time.queue.updateBuySelect(event)'>
-						<option value="noneType">None</option>
-						<option value="a">a</option>
-						</select>
-
-						<label for="queueBuySelect">Choose:</label>
-
-						<select name="queueBuySelect" id="queueBuySelect" onchange= 'game.time.queue.buyFromSelect(event)'>
-						<option value="noneBuy">None</option>
-						</select>
-						<button type="queueAddButton" onclick="game.time.queue.buttonQueue(event)">Add to queue</button>
-						<p id = "queue_list_ui" onclick = "game.time.queue.listDrop(event)"></p>-->
-
-					</div>
 				</div>
-				<div id="toggleCenter" onclick="gamePage.ui.toggleCenter();" class="column" tooltip="Toggle centered view">
+				<div
+					id="toggleCenter" onClick="gamePage.ui.toggleCenter();" class="column" tooltip="Toggle centered view"
+				>
 					<span class="toggleCenter">&gt;</span>
 				</div>
 			</div>
@@ -857,10 +835,13 @@
 							enableKS();
 							game.msg(text);
 						} else {
-							var ret = prompt('为了更好的游戏体验~推荐萌新手动体验一周目\n在发展到一定条件下就无需密码\n如果实在需要可在群里询问密码',);
-							if (ret === 'CheneyMR') {
-								enableKS();
-								game.msg(text);
+							var confirm = window.confirm('为了更好的游戏体验~推荐萌新手动体验一周目\n在发展到一定条件下就无需密码');
+							if (confirm) {
+								var ret = window.prompt('如果实在需要可在猫国群里私聊群主询问密码',);
+								if (ret === 'CheneyMR' || ret === 'MRCheney') {
+									enableKS();
+									game.msg(text);
+								}
 							}
 						}
 					}
@@ -904,7 +885,7 @@
 					numId = nummonLoad = srcNummon = null;
 				}
 			};
-			var numId = setInterval(nummonLoad, 3000);
+			var numId = setInterval(nummonLoad, 2000);
 
 			var paragonWebsite = function() {
 				if (typeof gamePage !== "undefined") {
