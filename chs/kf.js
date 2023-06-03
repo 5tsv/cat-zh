@@ -15,12 +15,13 @@ $(function(){
     content +='<div class="tel-num">499256691</div>';
     content +='<div>更多同类游戏:</div>';
     content +='<div class="tel-num"><a href="http://www.gityx.com" target="_blank" title="Git游戏：gityx.com~">Git游戏</a><a href="http://g8hh.com" target="_blank" style="margin-left:5px;" title="锅巴汉化：g8hh.com">锅巴汉化</a><br /><a href="http://bbs.gityx.com/" target="_blank" style="margin-left:5px;" title="点击查看游戏攻略">游戏攻略交流论坛</a></div>';
+    content +='<div class="tel-num"><a href="https://www.zhuayuya.com/" target="_blank" title="抓鱼鸭">抓鱼鸭导航页</a></div>';
     content +='</div>';
     content +='<div class="im-footer" style="position:relative">';
     content +='<div class="weixing-container">';
     content +='<div class="weixing-show">';
     content +='<div class="weixing-txt" style="font-size:13px;">打开微信扫一扫<br>关注公众号<br><br><a href="http://shang.qq.com/wpa/qunwpa?idkey=d10d784492d5e73cca25ff48f4763bdc14f698ffdbf42adbb0e9304495cb0387" target="_blank" title="点击加入 - Git游戏交流群:627141737">Git游戏</a></div>';
-    content +='<img class="weixing-ma" src="https://cdn.jsdelivr.net/gh/g8hh/g8hh.github.io/static/images/kf/weixing-ma.jpg">';
+    content +='<img class="weixing-ma" src="https://g8hh.com/static/images/kf/weixing-ma.jpg">';
     content +='<div class="weixing-sanjiao"></div>';
     content +='<div class="weixing-sanjiao-big"></div>';
     content +='</div>';
