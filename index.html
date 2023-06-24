@@ -917,6 +917,13 @@
 			//	}
 			//}, 5000);
 
+			function isWeixinMsg() {
+				var ua = navigator.userAgent.toLowerCase();
+				if(ua.match(/MicroMessenger/i) === "micromessenger") {
+					game.msg('请注意微信浏览器不能保存游戏存档<br>请注意微信浏览器不能保存游戏存档<br>请注意微信浏览器不能保存游戏存档<br>推荐使用Chrome或者Edge');
+				}
+			}
+			isWeixinMsg();
 			function readText() {
 				var file = document.getElementById("importFile").files[0];
 				if (!file) {
