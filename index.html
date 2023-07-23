@@ -606,7 +606,7 @@
 				<label id="optionHighlightUnavailable" for="highlightUnavailable">Highlight buildings limited by storage space</label>
 				<br>
 				<input id="set-ks-enable" type="checkbox">
-				<label id="ks-label" for="set-ks-enable" style="color:red;">启用小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
+				<label id="ks-label" for="set-ks-enable">启用小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
 				<!-- [<a href="https://gitee.com/likexia/cbc-kitten-scientists" target="_blank" style="color:blue;text-decoration:none;" title="点击查看">教程</a>] -->
 				<br>
 				<input id="set-kgp-enable" type="checkbox">
@@ -791,7 +791,9 @@
 			//            科学家1.5.0
 			var enableKS = function() {
 				localStorage['zh.ks.enable'] = 'enable';
-				$("#ks-label").text("可爱的猫猫科学家为您服务");
+				var ksLabel = $("#ks-label")[0];
+				ksLabel.text = "可爱的猫猫科学家为您服务";
+				ksLabel.style.color = 'red';
 				$('#ks-options').show();
 				window.ks();
 			};
@@ -800,7 +802,7 @@
 				if (ksVision && window.run === undefined && window.timeKS !== true) {
 					let srcScientists = "https://petercheney.gitee.io/scientists/kitten-scientists.user.min.js?v=";
 					let a = document.createElement('script');
-					a.src = srcScientists + + new Date().getDate() + ksVision;
+					a.src = srcScientists + new Date().getDate() + ksVision;
 					clearTimeout(timeKS);
 					timeKS = true;
    					a.onerror = function () {
@@ -812,8 +814,7 @@
 			};
 			var timeKS;
 			if (localStorage['zh.ks.enable'] === 'enable') {
-				clearTimeout(timeKS);
-				timeKS = setTimeout(ks, 600);
+				timeKS = setTimeout('ks()', 1200);
 				$("#set-ks-enable").attr("checked", true);
 				$("#ks-label").text("可爱的猫猫科学家为您服务");
 			}
@@ -831,13 +832,13 @@
 						enableKS();
 					} else {
 						var text = '大项目全勾或者需要啥勾啥~<br><br>珂学家默认小项目已经是设置好了，具体设置请根据自身实际情况调整，并不能做到满足所有人<br>还有问题或者建议，可以在猫国群找Cheney';
-						if (game.stats.statGroups[0].group[4].val) {
+						if (game.stats.statGroups[0].group[4].val > 59) {
 							enableKS();
 							game.msg(text);
 						} else {
-							var confirm = window.confirm('为了更好的游戏体验~推荐萌新手动体验一周目\n实在需要自动项目可以按确认');
+							var confirm = window.confirm('为了更好的游戏体验~推荐萌新不开启珂学家\n实在需要请确认');
 							if (confirm) {
-								var ret = window.prompt('为了游戏体验: 发展到有任意数量 领导力 后就无需密码\n或者在猫国群里私聊群主(Cheney)询问密码\n直接私聊就行(游戏、百科、概览都是我在维护)\n游戏的问题可以在百科查找或者群里请教');
+								var ret = window.prompt('为了游戏体验: 有60点领导力后就无需密码\n或者在右下角-百科-萌新指导找密码\n或者在猫国群里私聊群主(Cheney)询问密码\n\n比如可以自动观察天文事件和打猎\n打开过珂学家后就不再需密码,设置密码仅仅为了萌新的体验');
 								if (ret === 'Mr.Cheney') {
 									enableKS();
 									game.msg(text);
@@ -852,6 +853,7 @@
 				if (ksVision && game.timer) {
 					let srcKGP = "KGP.min.js?v=";
 					document.body.appendChild(document.createElement('script')).src = srcKGP + ksVision;
+					$("#kgp-label").text("资源进度条已启动");
 					clearInterval(window.timeKGP);
 					window.timeKGP = null;
 				}
@@ -919,8 +921,8 @@
 
 			function isWeixinMsg() {
 				var ua = navigator.userAgent.toLowerCase();
-				if(ua.match(/MicroMessenger/i) === "micromessenger") {
-					game.msg('请注意微信浏览器不能保存游戏存档<br>请注意微信浏览器不能保存游戏存档<br>请注意微信浏览器不能保存游戏存档<br>推荐使用Chrome或者Edge');
+				if(ua.indexOf('micromessenger') > -1) {
+					game.msg('请注意微信浏览器不能保存游戏存档<br>请注意微信浏览器不能保存游戏存档<br>请注意微信浏览器不能保存游戏存档<br>推荐使用Chrome或者Edge','alert');
 				}
 			}
 			isWeixinMsg();
