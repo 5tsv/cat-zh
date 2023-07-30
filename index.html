@@ -606,7 +606,7 @@
 				<label id="optionHighlightUnavailable" for="highlightUnavailable">Highlight buildings limited by storage space</label>
 				<br>
 				<input id="set-ks-enable" type="checkbox">
-				<label id="ks-label" for="set-ks-enable">启用小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
+				<label id="ks-label" for="set-ks-enable">小猫珂学家</label><a href="https://petercheney.gitee.io/baike/?file=004-第三方工具/02-小猫科学家" target="_blank">&nbsp;&nbsp;[使用说明书]</a>
 				<!-- [<a href="https://gitee.com/likexia/cbc-kitten-scientists" target="_blank" style="color:blue;text-decoration:none;" title="点击查看">教程</a>] -->
 				<br>
 				<input id="set-kgp-enable" type="checkbox">
@@ -788,11 +788,11 @@
 		<!--客服 结束-->
 
 		<script type="text/javascript">
-			//            科学家1.5.0
+			var ksLabel = $("#ks-label")[0]
 			var enableKS = function() {
 				localStorage['zh.ks.enable'] = 'enable';
 				var ksLabel = $("#ks-label")[0];
-				ksLabel.text = "可爱的猫猫科学家为您服务";
+				ksLabel.innerText = "可爱的猫猫科学家为您服务";
 				ksLabel.style.color = 'red';
 				$('#ks-options').show();
 				window.ks();
@@ -815,8 +815,9 @@
 			var timeKS;
 			if (localStorage['zh.ks.enable'] === 'enable') {
 				timeKS = setTimeout('ks()', 1200);
-				$("#set-ks-enable").attr("checked", true);
-				$("#ks-label").text("可爱的猫猫科学家为您服务");
+				$("#set-ks-enable").prop("checked", true);
+				ksLabel.innerText = "可爱的猫猫科学家为您服务";
+				ksLabel.style.color = 'red';
 			}
 			$("#set-ks-enable").on('change', function() {
 				if (localStorage['zh.ks.enable'] === 'enable') {
@@ -825,23 +826,25 @@
 						let engine = $('#toggle-engine');
 						engine.is(':checked') ? engine.click() : false;
 						$('#ks-options').hide();
-						$("#ks-label").text("启用小猫珂学家");
+						ksLabel.innerText = "启用小猫珂学家";
 					}
 				} else {
 					if (localStorage['zh.ks.enable']) {
 						enableKS();
 					} else {
 						var text = '大项目全勾或者需要啥勾啥~<br><br>珂学家默认小项目已经是设置好了，具体设置请根据自身实际情况调整，并不能做到满足所有人<br>还有问题或者建议，可以在猫国群找Cheney';
-						if (game.stats.statGroups[0].group[4].val > 59) {
+						if (game.stats.statGroups[0].group[4].val > 59 || game.stats.statGroups[0].group[2].val > 2e3) {
 							enableKS();
 							game.msg(text);
 						} else {
 							var confirm = window.confirm('为了更好的游戏体验~推荐萌新不开启珂学家\n实在需要请确认');
 							if (confirm) {
-								var ret = window.prompt('为了游戏体验: 有60点领导力后就无需密码\n或者在右下角-百科-萌新指导找密码\n或者在猫国群里私聊群主(Cheney)询问密码\n\n比如可以自动观察天文事件和打猎\n打开过珂学家后就不再需密码,设置密码仅仅为了萌新的体验');
+								var ret = window.prompt('为了游戏体验: 有60点领导力后开启就无需密码\n重置后会基于猫口数量 - 70 获得领导力(即130猫口)\n一定数量的猫口数量重置比不重置发展快10倍\n\n或者在右下角-百科-猫国萌新指导-猫国萌新指导中找密码\n如果找不到可以在猫国群(499256691)里私聊群主(Cheney)询问密码\n\n比如可以自动观察天文事件和打猎\n打开过珂学家后就不再需密码,设置密码仅仅为了萌新的体验');
 								if (ret === 'Mr.Cheney') {
 									enableKS();
 									game.msg(text);
+								} else {
+									game.msg('密错错误','notice');
 								}
 							}
 						}
@@ -859,7 +862,7 @@
 				}
 			};
 			if (localStorage['zh.kgp.enable'] !== 'disable') {
-				$("#set-kgp-enable").attr("checked", true);
+				$("#set-kgp-enable").prop("checked", true);
 				var timeKGP = setInterval(loadKGP, 1000);
 			}
 
