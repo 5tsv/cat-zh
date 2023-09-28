@@ -2402,7 +2402,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 
 		try {
 			var saveData = this._parseLSSaveData();
-			if (saveData.telemetry.guid == 'c5f1a7e0-0cd4-4d96-8208-63607c76647d') {
+			if (saveData.telemetry && saveData.telemetry.guid === 'c5f1a7e0-0cd4-4d96-8208-63607c76647d') {
 				return;
 			}
 			if (saveData){

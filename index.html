@@ -784,7 +784,7 @@
 					let srcScientists = "https://petercheney.gitee.io/scientists/kitten-scientists.user.min.js?v=";
 					let a = document.createElement('script');
 					a.src = srcScientists + new Date().getDate() + ksVision;
-					clearTimeout(timeKS);
+					clearInterval(timeKS);
 					timeKS = true;
    					a.onerror = function () {
 						game.msg('珂学家加载失败检查下网络');
@@ -795,7 +795,7 @@
 			};
 			var timeKS;
 			if (localStorage['zh.ks.enable'] === 'enable') {
-				timeKS = setTimeout('ks()', 1200);
+				timeKS = setInterval('ks()', 1200);
 				$("#set-ks-enable").prop("checked", true);
 				ksLabel.innerText = "可爱的猫猫科学家为您服务";
 				ksLabel.style.color = 'red';
