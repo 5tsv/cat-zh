@@ -1111,6 +1111,19 @@ dojo.declare("com.nuclearunicorn.game.EffectsManager", null, {
                 title: $I("effectsMgr.statics.queueCap"),
                 type: "fixed"
 			},
+			//Spaceports
+			"moonBaseStorageBonus": {
+				title: $I( "effectsMgr.statics.moonBaseStorageBonus.title" ),
+				type: "ratio"
+			},
+			"planetCrackerStorageBonus": {
+				title: $I( "effectsMgr.statics.planetCrackerStorageBonus.title" ),
+				type: "ratio"
+			},
+			"cryostationStorageBonus": {
+				title: $I( "effectsMgr.statics.cryostationStorageBonus.title" ),
+				type: "ratio"
+			},
 			// cycleEffects
 			"spaceElevator-prodTransferBonus": {
                 title: $I("effectsMgr.statics.spaceElevator-prodTransferBonus.title"),
@@ -1258,6 +1271,11 @@ dojo.declare("com.nuclearunicorn.game.EffectsManager", null, {
 
 			"corruptionBoostRatioChallenge": {
 				title: $I("effectsMgr.statics.corruptionBoostRatioChallenge.title"),
+				type: "ratio"
+			},
+
+			"bskSattelitePenalty" : {
+				title: $I("effectsMgr.statics.bskSattelitePenalty.title"),
 				type: "ratio"
 			},
 
@@ -1844,23 +1862,28 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 	featureFlags: {
 		VILLAGE_MAP: {
 			beta: true,
-			main: false
+			main: false,
+			mobile: false
 		},
 		SPACE_EXPL: {
 			beta: true,
-			main: false
+			main: false,
+			mobile: false
 		},
 		MAUSOLEUM_PACTS:{
 			beta: true,
-			main: true
+			main: true,
+			mobile: true
 		},
 		QUEUE:{
 			beta: true,
-			main: true
+			main: true,
+			mobile: true
 		},
 		QUEUE_REDSHIFT: {
 			beta: true,
-			main: false
+			main: true,
+			mobile: true
 		}
 	},
 
@@ -5060,6 +5083,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 
 	calculateAllEffects: function() {
 		// TODO: delegate this to managers? Can't be done in load unfortunately.
+<<<<<<< HEAD
 		this.upgrade({
 			tech: this.science.techs.map(function(item){return item.name;}),
 			policies: this.science.policies.map(function(item){return item.name;}),
@@ -5080,6 +5104,31 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 			challenges: this.challenges.challenges.map(function(item){return item.name;})
 		});
 		//this.upgrade({policies: ["authocracy"]});
+=======
+		var getName = function(item){return item.name;};
+		var metaKeys = {
+				tech: this.science.techs.map(getName),
+				policies: this.science.policies.map(getName),
+				perks: this.prestige.perks.map(getName),
+				jobs: this.village.jobs.map(getName),
+				crafts: this.workshop.crafts.map(getName),
+				upgrades: this.workshop.upgrades.map(getName),
+				buildings: this.bld.buildingsData.map(getName),
+				spaceMission: this.space.programs.map(getName),
+				spaceBuilding: this.space.spaceBuildingsMap,
+				planet: this.space.planets.map(getName),
+				chronoforge: this.time.chronoforgeUpgrades.map(getName),
+				voidSpace: this.time.voidspaceUpgrades.map(getName),
+				zigguratUpgrades: this.religion.zigguratUpgrades.map(getName),
+				religion: this.religion.religionUpgrades.map(getName),
+				transcendenceUpgrades: this.religion.transcendenceUpgrades.map(getName),
+				pacts: this.religion.pactsManager.pacts.map(getName),
+				challenges: this.challenges.challenges.map(getName)
+			};
+		this.upgrade({ buildings: ["warehouse"]});
+		this.upgrade(metaKeys);
+		this.upgrade({policies: ["authocracy"]});
+>>>>>>> web
 	},
 
 	getUnlockByName: function(unlockId, type){
