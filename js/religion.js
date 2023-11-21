@@ -269,19 +269,19 @@ dojo.declare("classes.managers.ReligionManager", com.nuclearunicorn.core.TabMana
 		var necrocornVal = this.game.resPool.get("necrocorn").value;
 		var corruptionWithExisting = this.game.religion.getCorruptionPerTickProduction(true);
 		var worstPerTickDelta = corruptionWithExisting * days *this.game.calendar.ticksPerDay + corruptionWithExisting;
-		if(!this.game.science.getPolicy(["siphoning"]).researched){
-			if(
-				(worstPerTickDelta >= 0)
-				||(worstPerTickDelta < 0 && necrocornVal + worstPerTickDelta * days > 0)&&
-				(this.game.resPool.get("alicorns").value - 1 + necrocornPerDay * days >= 0)){ //naive solution here
-				this.necrocornsNaiveFastForward(days, times);
-				return;
-			}
+		//if(!this.game.science.getPolicy(["siphoning"]).researched){
+		if(
+			(worstPerTickDelta >= 0)
+			||(worstPerTickDelta < 0 && necrocornVal + worstPerTickDelta * days > 0)&&
+			(this.game.resPool.get("alicorns").value - 1 + necrocornPerDay * days >= 0)){ //naive solution here
+			this.necrocornsNaiveFastForward(days, times);
+			return;
 		}
+		//}
 		var corruptionWithoutExisting = this.game.religion.getCorruptionPerTickProduction(false);
 		//here we chech if the necrocorns will get into cycles of being produced and spent, which also works with syphening
-		if(corruptionWithExisting * days/this.game.calendar.ticksPerDay + necrocornPerDay < 0 &&
-		corruptionWithoutExisting * days/this.game.calendar.ticksPerDay + necrocornPerDay > 0
+		if(corruptionWithExisting * this.game.calendar.ticksPerDay + necrocornPerDay < 0 &&
+		corruptionWithoutExisting * this.game.calendar.ticksPerDay + necrocornPerDay > 0
 		){
 			var alicornsResult = this.game.resPool.get("alicorns").value - 1 + necrocornPerDay * days;
 			var alicornsSpent = necrocornPerDay * days;
@@ -520,11 +520,11 @@ dojo.declare("classes.managers.ReligionManager", com.nuclearunicorn.core.TabMana
 			"corruptionRatio" : 0.000001
 		},
 		calculateEffects: function(self, game) {
-			self.effects["corruptionRatio"] = 0.000001 * (1 + game.getLimitedDR(game.getEffect("corruptionBoostRatioChallenge"), 2));
+			self.effects["corruptionRatio"] = 0.000001 * (1 + game.getEffect("corruptionBoostRatioChallenge")); //LDR specified in challenges.js
 		},
 		unlocked: false,
 		getEffectiveValue: function(game) {
-			return this.val * (1 + game.getLimitedDR(game.getEffect("corruptionBoostRatioChallenge"), 2));
+			return this.val * (1 + game.getEffect("corruptionBoostRatioChallenge")); //LDR specified in challenges.js
 		}
 	},{
 		name: "unicornGraveyard",
@@ -1078,7 +1078,7 @@ dojo.declare("classes.managers.ReligionManager", com.nuclearunicorn.core.TabMana
 	},
 	getSolarRevolutionRatio: function() {
 		var uncappedBonus = this.getRU("solarRevolution").on ? this.game.getUnlimitedDR(this.faith, 1000) / 100 : 0;
-		return this.game.getLimitedDR(uncappedBonus, 10 + this.game.getEffect("solarRevolutionLimit") + (this.game.challenges.getChallenge("atheism").researched ? (this.game.religion.transcendenceTier) : 0)) * (1 + this.game.getLimitedDR(this.game.getEffect("faithSolarRevolutionBoost"), 4));
+		return this.game.getLimitedDR(uncappedBonus, 10 + this.game.getEffect("solarRevolutionLimit") + (this.game.challenges.getChallenge("atheism").researched ? (this.game.religion.transcendenceTier) : 0)) * (1 + this.game.getEffect("faithSolarRevolutionBoost")/*(LDR specified in challenges.js)*/);
 	},
 
 	getApocryphaBonus: function(){
