@@ -95,7 +95,7 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 			console.log("Using preferred OS locale:", lang);
 			LCstorage["com.nuclearunicorn.kittengame.language"] = lang;
 		}
-		if (lang !== 'en' && lang !== 'zh' && lang !== 'zht') {
+		if (lang !== 'en' && lang !== 'zh') {
 			lang = 'zh';
 		}
 		// at this point we always have correct lang selected
@@ -128,6 +128,14 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 							$.extend(self.messages, crowdinLocale);
 							self._deferred.resolve();
 						}).fail(function(){
+							console.warn("no crowdin locale ", "'" + lang + "'", " found, skipping...");
+							self._deferred.resolve();
+						});
+						$.getJSON("res/i18n/crowdin/" + lang + "A.json?_=" + timestamp).then(function (e) {
+							console.log("loaded crowdin locale for lang", lang, e);
+							$.extend(self.messages, e);
+							self._deferred.resolve();
+						}).fail(function () {
 							console.warn("no crowdin locale ", "'" + lang + "'", " found, skipping...");
 							self._deferred.resolve();
 						});
