@@ -799,7 +799,7 @@
 			var ks = function() {
 				if (ksVision && window.run === undefined && window.timeKS !== true) {
                     // "https://petercheney.gitee.io/scientists/kitten-scientists.user.min.js?v="
-					let srcScientists = "https://gitee.com/petercheney/scientists/raw/master/kitten-scientists.user.min.js";
+					let srcScientists = "https://gitee.com/petercheney/scientists/raw/master/kitten-scientists.user.min.js?v=";
 					let a = document.createElement('script');
 					a.src = srcScientists + new Date().getDate() + ksVision;
 					clearInterval(timeKS);
@@ -884,7 +884,7 @@
 				if (typeof gamePage !== "undefined") {
 					// NummonInit();
                     // https://petercheney.gitee.io/nummoncalc/NummonCalc.min.js?v=
-					var srcNummon = 'https://gitee.com/petercheney/NummonCalc/raw/master/NummonCalc.min.js';
+					var srcNummon = 'https://gitee.com/petercheney/NummonCalc/raw/master/NummonCalc.min.js?v=';
 					document.body.appendChild(document.createElement('script')).src = srcNummon + ksVision;
 					clearInterval(numId);
 					numId = nummonLoad = srcNummon = null;
