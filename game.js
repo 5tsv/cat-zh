@@ -226,14 +226,14 @@ dojo.declare("classes.game.Server", null, {
 				cache: true,
 				type: "GET",
 				dataType: "JSON",
-				//url: "https://api.usuuu.com/qq/" + qqNumber
-                url: "https://tenapi.cn/qqname/",
-                data: {
-                    qq : qqNumber,
-                }
+				url: "https://api.usuuu.com/qq/" + qqNumber
+                // url: "https://tenapi.cn/qqname/",
+                // data: {
+                //     qq : qqNumber,
+                // }
 			}).done(function(resp) {
 				if (resp) {
-					userProfile.qqName = resp.name;
+					userProfile.qqName = resp.data.name;
 				} else {
 					userProfile.qqName = userProfile.email;
 				}
@@ -5471,32 +5471,32 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 	isEldermass: function(){
 		var boolean = false;
 		var date = new Date();
-        if (date.getMonth() == 11 && date.getDate() >= 15 && date.getDate() <= 31) {
-			var LS = (localStorage["time"]) ? new Date(localStorage["time"]) : false;
-            if (LS) {
-                if (LS.getFullYear() == date.getFullYear() && LS.getMonth() == 11 && LS.getDate() >= 15 && LS.getDate() <= 31) {
-                    boolean = true;
-                } else {
-					delete localStorage["time"];
-                }
-            } else {
-				$.ajax({
-					cache: false,
-					type: "GET",
-					dataType: "JSON",
-					crossDomain: true,
-					url: "https://worldtimeapi.org/api/ip/"
-				}).done(function(resp) {
-					if (resp) {
-						var time = new Date(resp.datetime);
-						localStorage["time"] = time.getMonth() + 1 + " " + time.getDate() + "," + time.getFullYear();
-						if (time.getMonth() == 11 && time.getDate() >= 15 && time.getDate() <= 31) {
-							boolean = true;
-						}
-					}
-				});
-            }
-		}
+        // if (date.getMonth() == 11 && date.getDate() >= 15 && date.getDate() <= 31) {
+		// 	var LS = (localStorage["time"]) ? new Date(localStorage["time"]) : false;
+        //     if (LS) {
+        //         if (LS.getFullYear() == date.getFullYear() && LS.getMonth() == 11 && LS.getDate() >= 15 && LS.getDate() <= 31) {
+        //             boolean = true;
+        //         } else {
+		// 			delete localStorage["time"];
+        //         }
+        //     } else {
+		// 		$.ajax({
+		// 			cache: false,
+		// 			type: "GET",
+		// 			dataType: "JSON",
+		// 			crossDomain: true,
+		// 			url: "https://worldtimeapi.org/api/ip/"
+		// 		}).done(function(resp) {
+		// 			if (resp) {
+		// 				var time = new Date(resp.datetime);
+		// 				localStorage["time"] = time.getMonth() + 1 + " " + time.getDate() + "," + time.getFullYear();
+		// 				if (time.getMonth() == 11 && time.getDate() >= 15 && time.getDate() <= 31) {
+		// 					boolean = true;
+		// 				}
+		// 			}
+		// 		});
+        //     }
+		// }
 		return boolean;
 	},
 	createRandomName: function(lenConst, charPool) {
