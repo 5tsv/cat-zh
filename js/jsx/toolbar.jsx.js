@@ -637,7 +637,7 @@ WCloudSaves = React.createClass({
 							}).fail(function(err) {
 								game.msg('获取存档信息失败，即将打开同步存档教程', "important");
 								var tempwindow = window.open();
-								tempwindow.location = 'https://petercheney.gitee.io/baike/?file=007-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/02-%E4%BA%91%E5%AD%98%E6%A1%A3';
+								tempwindow.location = 'https://lolitalibrary.com/wiki/?file=007-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/02-%E4%BA%91%E5%AD%98%E6%A1%A3';
 							});
                         }
                     }, 
