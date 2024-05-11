@@ -800,7 +800,7 @@
                     // "https://petercheney.gitee.io/scientists/kitten-scientists.user.min.js?v="
 					let srcScientists = "kitten-scientists.user.min.js?v=";
 					let a = document.createElement('script');
-					a.src = srcScientists + new Date().getDate() + ksVision;
+					a.src = srcScientists + ksVision;
 					clearInterval(timeKS);
 					timeKS = true;
    					a.onerror = function () {
